@@ -20,6 +20,3 @@ Designed with a modular architecture so new couriers can be added easily through
 - Simple and maintainable code structure  
 
 ---
-
-## Folder Structure
-
