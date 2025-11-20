@@ -123,8 +123,8 @@ export default function Home() {
          * ====================================== */}
         <div className="w-full md:w-[80%]">
           {trackingData && (
-            <>
-              {/* <div className="flex justify-center">
+            <div className="flex flex-col gap-20 justify-center bg-white min-h-screen shadow-lg p-6 md:p-8">
+              <div className="flex justify-center">
                 <img
                   src={
                     trackingData.courier === "Lion Parcel"
@@ -134,23 +134,21 @@ export default function Home() {
                   alt="Courier Logo"
                   className="h-24 md:h-32 object-contain"
                 />
-              </div> */}
-
-              <div className="flex flex-col gap-20 justify-center bg-white min-h-screen shadow-lg p-6 md:p-8">
-                <ProgressSteps steps={progressSteps} />
-                <div className="grid gap-5">
-                  <AddressBlock trackingData={trackingData} />
-
-                  <HistorySection
-                    groupedHistory={groupedHistory}
-                    sortedDates={sortedDates}
-                    expandedPOD={expandedPOD}
-                    togglePOD={togglePOD}
-                    formatTime={formatTime}
-                  />
-                </div>
               </div>
-            </>
+
+              <ProgressSteps steps={progressSteps} />
+              <div className="grid gap-5">
+                <AddressBlock trackingData={trackingData} />
+
+                <HistorySection
+                  groupedHistory={groupedHistory}
+                  sortedDates={sortedDates}
+                  expandedPOD={expandedPOD}
+                  togglePOD={togglePOD}
+                  formatTime={formatTime}
+                />
+              </div>
+            </div>
           )}
 
           {!loading && !trackingData && !result?.error && <EmptyState />}
