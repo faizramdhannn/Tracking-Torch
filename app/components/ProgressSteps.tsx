@@ -1,6 +1,6 @@
 export default function ProgressSteps({ steps }: any) {
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+    <>
       <div className="relative flex justify-between items-start">
         {steps.map((step: any, index: number) => {
           const isLast = index === steps.length - 1;
@@ -57,6 +57,6 @@ export default function ProgressSteps({ steps }: any) {
           );
         })}
       </div>
-    </div>
+    </>
   );
 }
