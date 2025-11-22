@@ -51,16 +51,21 @@ export const parseSicepatData = (
     podReceiver: t.POD_receiver || null,
     podTime: t.POD_receiver_time || null,
     podImage: t.pod_img_path || null,
-    history: (t.track_history || []).map((h: any) => ({
+    history: (t.track_history || []).map((h: any, index: number) => ({
       dateTime: h.date_time,
       status: h.status,
       statusCode: h.status,
+
       description:
-        h.status === "DELIVERED" && h.receiver_name
+        index === 0 && /pick\s*up\s*dari/i.test(h.city ?? "")
+          ? "Terima Permintaan Pick Up Dari TORCH.ID"
+          : h.status === "DELIVERED" && h.receiver_name
           ? h.receiver_name
           : h.city || "",
+
       location: h.city || "",
       receivedBy: h.status === "DELIVERED" ? h.receiver_name : null,
+
       attachment:
         h.status === "DELIVERED" && t.pod_img_path
           ? [t.pod_img_path, t.pod_sign_img_path].filter(Boolean)

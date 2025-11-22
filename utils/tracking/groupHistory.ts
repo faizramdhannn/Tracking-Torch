@@ -4,7 +4,12 @@ export type FormatDateFn = (input: string) => string;
 
 export const groupHistoryByDate = (
   history: HistoryItem[],
-  formatDate: FormatDateFn = (d) => new Date(d).toISOString().split("T")[0] // default: YYYY-MM-DD
+  formatDate: FormatDateFn = (d) =>
+    new Date(d).toLocaleDateString("id-ID", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    })
 ) => {
   return history.reduce<Record<string, HistoryItem[]>>((acc, item) => {
     const date = formatDate(item.dateTime);
@@ -15,3 +20,4 @@ export const groupHistoryByDate = (
     return acc;
   }, {});
 };
+

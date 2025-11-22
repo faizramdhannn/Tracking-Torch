@@ -8,7 +8,7 @@ export default function HistorySection({
   formatTime,
 }: any) {
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+    <>
       <h2 className="text-2xl font-bold text-[#06334d] mb-6">
         Riwayat Pengiriman
       </h2>
@@ -43,6 +43,6 @@ export default function HistorySection({
           </div>
         ))}
       </div>
-    </div>
+    </>
   );
 }
