@@ -44,7 +44,7 @@ export default function HistoryItem({
       </div>
 
       {!!hasPOD && expandedPOD.includes(podKey) && (
-        <div className="ml-[88px] mb-3 p-3 bg-[#abc82e33] rounded-lg">
+        <div className="ml-[88px] mb-3 p-3 rounded-lg">
           <HistoryPOD item={item} />
         </div>
       )}

@@ -7,7 +7,7 @@ export const groupHistoryByDate = (
   formatDate: FormatDateFn = (d) =>
     new Date(d).toLocaleDateString("id-ID", {
       day: "2-digit",
-      month: "long",
+      month: "short",
       year: "numeric",
     })
 ) => {
