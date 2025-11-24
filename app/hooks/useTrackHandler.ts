@@ -1,41 +1,35 @@
-"use client";
-
 import { useState } from "react";
-import { TrackingApiResponse } from "@/types/tracking";
 
 export function useTrackHandler() {
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<TrackingApiResponse | null>(null);
+  const [result, setResult] = useState<any>(null);
 
   const handleTrack = async (stt: string) => {
     if (!stt.trim()) {
-      setResult({
-        success: false,
-        error: "Nomor resi tidak boleh kosong",
-      });
+      setResult({ error: "Nomor resi tidak boleh kosong" });
       return;
     }
 
     setLoading(true);
+    setResult(null);
 
     try {
-      const res = await fetch(`/api/tracking/${stt}`);
-      const json: TrackingApiResponse = await res.json();
-      setResult(json);
-    } catch (err) {
-      setResult({
-        success: false,
-        error: "Gagal mengambil data tracking",
-      });
+      // Gunakan absolute path yang selalu dimulai dari root
+      const response = await fetch(`/api/tracking/${stt.trim()}`);
+      const data = await response.json();
+
+      if (!response.ok) {
+        setResult({ error: data.error || "Gagal mengambil data" });
+      } else {
+        setResult(data);
+      }
+    } catch (error) {
+      console.error("Tracking error:", error);
+      setResult({ error: "Terjadi kesalahan saat melacak paket" });
     } finally {
       setLoading(false);
     }
   };
 
-  return {
-    loading,
-    result,
-    setResult,
-    handleTrack,
-  };
+  return { loading, result, handleTrack };
 }

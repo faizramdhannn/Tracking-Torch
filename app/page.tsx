@@ -13,7 +13,11 @@ import { useTrackHandler } from "./hooks/useTrackHandler";
 import { useTogglePOD } from "./hooks/useTogglePOD";
 import { useTrackingData } from "./hooks/useTrackingData";
 
-export default function Home() {
+interface HomeProps {
+  onNewTracking?: (sttNumber: string) => void;
+}
+
+export default function Home({ onNewTracking }: HomeProps = {}) {
   const [stt, setStt] = useState("");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -22,14 +26,27 @@ export default function Home() {
   const { trackingData, groupedHistory, sortedDates, progressSteps } =
     useTrackingData(result, stt);
 
-useEffect(() => {
-  const auto = localStorage.getItem("AUTO_STT");
-  if (auto) {
-    setStt(auto);
-    handleTrack(auto);
-    localStorage.removeItem("AUTO_STT");
-  }
-}, []);
+  useEffect(() => {
+    const auto = localStorage.getItem("AUTO_STT");
+    if (auto) {
+      setStt(auto);
+      handleTrack(auto);
+      localStorage.removeItem("AUTO_STT");
+    }
+  }, []);
+
+  // Handler untuk tracking - bisa redirect jika onNewTracking tersedia
+  const handleTrackWithRedirect = async (sttNumber: string) => {
+    if (!sttNumber.trim()) return;
+
+    // Jika ada callback onNewTracking, redirect ke URL baru
+    if (onNewTracking) {
+      onNewTracking(sttNumber.trim());
+    } else {
+      // Jika tidak ada callback, lakukan tracking normal
+      await handleTrack(sttNumber);
+    }
+  };
 
   return (
     <main className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
@@ -93,7 +110,7 @@ useEffect(() => {
                 type="text"
                 value={stt}
                 onChange={(e) => setStt(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleTrack(stt)}
+                onKeyDown={(e) => e.key === "Enter" && handleTrackWithRedirect(stt)}
                 placeholder="Masukkan Nomor Resi"
                 className="
                   border-2 border-gray-300 
@@ -107,7 +124,7 @@ useEffect(() => {
               />
 
               <button
-                onClick={() => handleTrack(stt)}
+                onClick={() => handleTrackWithRedirect(stt)}
                 disabled={loading}
                 className="
                   bg-[#06334d] 
