@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Package, X } from "lucide-react";
 
 import ProgressSteps from "./components/ProgressSteps";
@@ -13,7 +13,11 @@ import { useTrackHandler } from "./hooks/useTrackHandler";
 import { useTogglePOD } from "./hooks/useTogglePOD";
 import { useTrackingData } from "./hooks/useTrackingData";
 
-export default function Home() {
+interface HomeProps {
+  onNewTracking?: (sttNumber: string) => void;
+}
+
+export default function Home({ onNewTracking }: HomeProps = {}) {
   const [stt, setStt] = useState("");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -21,6 +25,28 @@ export default function Home() {
   const { loading, result, handleTrack } = useTrackHandler();
   const { trackingData, groupedHistory, sortedDates, progressSteps } =
     useTrackingData(result, stt);
+
+  useEffect(() => {
+    const auto = localStorage.getItem("AUTO_STT");
+    if (auto) {
+      setStt(auto);
+      handleTrack(auto);
+      localStorage.removeItem("AUTO_STT");
+    }
+  }, []);
+
+  // Handler untuk tracking - bisa redirect jika onNewTracking tersedia
+  const handleTrackWithRedirect = async (sttNumber: string) => {
+    if (!sttNumber.trim()) return;
+
+    // Jika ada callback onNewTracking, redirect ke URL baru
+    if (onNewTracking) {
+      onNewTracking(sttNumber.trim());
+    } else {
+      // Jika tidak ada callback, lakukan tracking normal
+      await handleTrack(sttNumber);
+    }
+  };
 
   return (
     <main className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
@@ -51,7 +77,7 @@ export default function Home() {
         <div
           className={`
             fixed md:relative 
-            inset-y-0 left-0 
+            inset-y-0 left-0
             w-[85%] max-w-xs md:w-full 
             bg-white md:bg-transparent
             z-50 md:z-auto
@@ -84,7 +110,7 @@ export default function Home() {
                 type="text"
                 value={stt}
                 onChange={(e) => setStt(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleTrack(stt)}
+                onKeyDown={(e) => e.key === "Enter" && handleTrackWithRedirect(stt)}
                 placeholder="Masukkan Nomor Resi"
                 className="
                   border-2 border-gray-300 
@@ -98,7 +124,7 @@ export default function Home() {
               />
 
               <button
-                onClick={() => handleTrack(stt)}
+                onClick={() => handleTrackWithRedirect(stt)}
                 disabled={loading}
                 className="
                   bg-[#06334d] 
@@ -151,7 +177,18 @@ export default function Home() {
             </div>
           )}
 
-          {!loading && !trackingData && !result?.error && <EmptyState />}
+          {loading && (
+            <div className="w-full h-screen flex items-center justify-center">
+              <div className="flex flex-col items-center gap-3">
+                <div className="w-10 h-10 border-4 border-gray-300 border-t-[#06334d] rounded-full animate-spin"></div>
+                <p className="text-gray-600 text-sm md:text-base">
+                  Sedang mencari data...
+                </p>
+              </div>
+            </div>
+          )}
+
+          {!trackingData && !result?.error && <EmptyState />}
           {result?.error && <ErrorBox result={result} />}
         </div>
       </div>

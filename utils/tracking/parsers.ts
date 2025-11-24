@@ -1,4 +1,5 @@
 import { TrackingData } from "@/types/tracking";
+import { cleanRemarks } from "./cleanRemarks";
 
 export const parseLionData = (data: any, stt: string): TrackingData | null => {
   const t = data.stts?.[0];
@@ -18,7 +19,7 @@ export const parseLionData = (data: any, stt: string): TrackingData | null => {
       dateTime: h.datetime,
       status: h.current_status,
       statusCode: h.status_code,
-      description: h.remarks,
+     description: cleanRemarks(h.remarks),
       location: `${h.location} - ${h.city}`,
       courierName: h.courier_name,
       receivedBy: h.received_by,
@@ -58,7 +59,7 @@ export const parseSicepatData = (
 
       description:
         index === 0 && /pick\s*up\s*dari/i.test(h.city ?? "")
-          ? "Terima Permintaan Pick Up Dari TORCH.ID"
+          ? "Paketmu Telah Diproses"
           : h.status === "DELIVERED" && h.receiver_name
           ? h.receiver_name
           : h.city || "",
