@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Package, X } from "lucide-react";
 
 import ProgressSteps from "./components/ProgressSteps";
@@ -21,6 +21,15 @@ export default function Home() {
   const { loading, result, handleTrack } = useTrackHandler();
   const { trackingData, groupedHistory, sortedDates, progressSteps } =
     useTrackingData(result, stt);
+
+useEffect(() => {
+  const auto = localStorage.getItem("AUTO_STT");
+  if (auto) {
+    setStt(auto);
+    handleTrack(auto);
+    localStorage.removeItem("AUTO_STT");
+  }
+}, []);
 
   return (
     <main className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
