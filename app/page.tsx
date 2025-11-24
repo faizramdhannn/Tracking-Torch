@@ -149,7 +149,7 @@ export default function Home({ onNewTracking }: HomeProps = {}) {
          * ====================================== */}
         <div className="w-full md:w-[80%]">
           {trackingData && (
-            <div className="flex flex-col gap-20 justify-center bg-white min-h-screen shadow-lg p-6 md:p-8">
+            <div className="flex flex-col gap-10 justify-center bg-white min-h-screen shadow-lg p-6 md:p-8">
               <div className="flex justify-center">
                 <img
                   src={

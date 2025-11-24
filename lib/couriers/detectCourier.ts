@@ -8,7 +8,7 @@ export const detectCourier = (
     upper.startsWith("19LP") ||
     upper.startsWith("88LP");
 
-  const isSicepat = upper.startsWith("00") || upper.startsWith("88");
+  const isSicepat = upper.startsWith("00");
 
   if (isLion) return "lion";
   if (isSicepat) return "sicepat";

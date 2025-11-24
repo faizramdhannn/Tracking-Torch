@@ -1,7 +1,7 @@
 export const formatDate = (dateString: string) =>
   new Date(dateString).toLocaleDateString("id-ID", {
     day: "2-digit",
-    month: "long",
+    month: "short",
     year: "numeric",
   });
 
