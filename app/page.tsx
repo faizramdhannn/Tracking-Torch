@@ -51,7 +51,7 @@ export default function Home() {
         <div
           className={`
             fixed md:relative 
-            inset-y-0 left-0 
+            inset-y-0 left-0
             w-[85%] max-w-xs md:w-full 
             bg-white md:bg-transparent
             z-50 md:z-auto
@@ -151,7 +151,18 @@ export default function Home() {
             </div>
           )}
 
-          {!loading && !trackingData && !result?.error && <EmptyState />}
+          {loading && (
+            <div className="w-full h-screen flex items-center justify-center">
+              <div className="flex flex-col items-center gap-3">
+                <div className="w-10 h-10 border-4 border-gray-300 border-t-[#06334d] rounded-full animate-spin"></div>
+                <p className="text-gray-600 text-sm md:text-base">
+                  Sedang mencari data...
+                </p>
+              </div>
+            </div>
+          )}
+
+          {!trackingData && !result?.error && <EmptyState />}
           {result?.error && <ErrorBox result={result} />}
         </div>
       </div>
