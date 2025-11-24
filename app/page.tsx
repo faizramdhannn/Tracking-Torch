@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Package, X } from "lucide-react";
+import { useEffect, useState, useCallback } from "react";
+import { ChevronRight, X } from "lucide-react";
 
 import ProgressSteps from "./components/ProgressSteps";
 import AddressBlock from "./components/AddressBlock";
@@ -20,7 +20,7 @@ interface HomeProps {
 export default function Home({ onNewTracking }: HomeProps = {}) {
   const [stt, setStt] = useState("");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
+  const [showHint, setShowHint] = useState(false);
   const { expandedPOD, togglePOD } = useTogglePOD();
   const { loading, result, handleTrack } = useTrackHandler();
   const { trackingData, groupedHistory, sortedDates, progressSteps } =
@@ -33,37 +33,40 @@ export default function Home({ onNewTracking }: HomeProps = {}) {
       handleTrack(auto);
       localStorage.removeItem("AUTO_STT");
     }
-  }, []);
+  }, [handleTrack]);
 
-  // Handler untuk tracking - bisa redirect jika onNewTracking tersedia
-  const handleTrackWithRedirect = async (sttNumber: string) => {
+  const handleTrackWithRedirect = useCallback(async (sttNumber: string) => {
     if (!sttNumber.trim()) return;
+    setIsDrawerOpen(false);
 
-    // Jika ada callback onNewTracking, redirect ke URL baru
     if (onNewTracking) {
       onNewTracking(sttNumber.trim());
     } else {
-      // Jika tidak ada callback, lakukan tracking normal
       await handleTrack(sttNumber);
     }
-  };
+  }, [onNewTracking, handleTrack]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!isDrawerOpen && stt.trim() === "") {
+        setShowHint(true);
+      } else {
+        setShowHint(false);
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [isDrawerOpen, stt]);
 
   return (
     <main className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
-      <div className="max-w-[1200px] mx-auto flex gap-6 relative px-5">
-        {/* ======================================
-         * MOBILE BUTTON (Floating)
-         * ====================================== */}
-        <button
-          className="md:hidden fixed left-0 top-1/2 -translate-y-1/2 bg-[#06334d] text-white px-4 py-3 rounded-r-xl shadow-lg z-40"
-          onClick={() => setIsDrawerOpen(true)}
-        >
-          <Package className="w-6 h-6" />
-        </button>
+      {showHint && !isDrawerOpen && (
+        <div onClick={() => setIsDrawerOpen(!isDrawerOpen)} className="cursor-pointer md:hidden fixed left-2 top-[47%] max-w-[120px] -translate-y-1/2 bg-white text-[#06334d] shadow-lg px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 animate-fadePop z-50">
+          Masukkan nomor resi di sini
+        </div>
+      )}
 
-        {/* ======================================
-         * MOBILE OVERLAY
-         * ====================================== */}
+      <div className="max-w-[1200px] mx-auto flex gap-6 relative px-5">
         {isDrawerOpen && (
           <div
             className="md:hidden fixed inset-0 bg-black/40 z-40"
@@ -71,28 +74,36 @@ export default function Home({ onNewTracking }: HomeProps = {}) {
           />
         )}
 
-        {/* ======================================
-         * INPUT BOX (Drawer Mobile + Sticky Desktop)
-         * ====================================== */}
         <div
           className={`
             fixed md:relative 
             inset-y-0 left-0
             w-[85%] max-w-xs md:w-full 
             bg-white md:bg-transparent
-            z-50 md:z-auto
+            z-40 md:z-auto
             transform transition-transform duration-300 ease-in-out
             ${
               isDrawerOpen
                 ? "translate-x-0"
-                : "-translate-x-full md:translate-x-0"
+                : "-translate-x-[95%] md:translate-x-0"
             }
           `}
         >
+          <button
+            className="md:hidden absolute top-1/2 -right-3 bg-white border border-gray-400 rounded-full p-1 transition-all"
+            onClick={() => setIsDrawerOpen(!isDrawerOpen)}
+          >
+            <ChevronRight
+              className={`w-7 h-7 transition-transform duration-300 ${
+                isDrawerOpen ? "rotate-180" : ""
+              }`}
+            />
+          </button>
+
           <div className="md:sticky md:top-[35%] h-full md:h-auto bg-white rounded-r-2xl md:rounded-2xl shadow-2xl md:shadow-lg p-6">
             {/* Close drawer (Mobile only) */}
             <button
-              className="md:hidden absolute top-4 right-4 text-gray-500"
+              className="md:hidden absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors"
               onClick={() => setIsDrawerOpen(false)}
             >
               <X className="w-6 h-6" />
@@ -110,7 +121,9 @@ export default function Home({ onNewTracking }: HomeProps = {}) {
                 type="text"
                 value={stt}
                 onChange={(e) => setStt(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleTrackWithRedirect(stt)}
+                onKeyDown={(e) =>
+                  e.key === "Enter" && handleTrackWithRedirect(stt)
+                }
                 placeholder="Masukkan Nomor Resi"
                 className="
                   border-2 border-gray-300 
@@ -120,6 +133,7 @@ export default function Home({ onNewTracking }: HomeProps = {}) {
                   text-sm md:text-base 
                   focus:border-[#abc82e] 
                   focus:outline-none
+                  transition-colors
                 "
               />
 
@@ -136,6 +150,7 @@ export default function Home({ onNewTracking }: HomeProps = {}) {
                   disabled:bg-gray-400 
                   hover:bg-[#052a3f] 
                   text-sm md:text-base
+                  transition-colors
                 "
               >
                 {loading ? "Mencari..." : "Lacak"}
