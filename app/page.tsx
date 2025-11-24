@@ -35,18 +35,13 @@ export default function Home({ onNewTracking }: HomeProps = {}) {
     }
   }, [handleTrack]);
 
-  // Handler untuk tracking - bisa redirect jika onNewTracking tersedia
   const handleTrackWithRedirect = useCallback(async (sttNumber: string) => {
     if (!sttNumber.trim()) return;
-
-    // Tutup drawer setelah tracking
     setIsDrawerOpen(false);
 
-    // Jika ada callback onNewTracking, redirect ke URL baru
     if (onNewTracking) {
       onNewTracking(sttNumber.trim());
     } else {
-      // Jika tidak ada callback, lakukan tracking normal
       await handleTrack(sttNumber);
     }
   }, [onNewTracking, handleTrack]);
@@ -66,11 +61,11 @@ export default function Home({ onNewTracking }: HomeProps = {}) {
   return (
     <main className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
       {showHint && !isDrawerOpen && (
-        <div className="md:hidden fixed left-2 top-[47%] max-w-[100px] -translate-y-1/2 bg-white text-[#06334d] shadow-lg px-3 py-2 rounded-lg text-xs font-medium border border-gray-200 animate-fadePop z-50">
+        <div onClick={() => setIsDrawerOpen(!isDrawerOpen)} className="cursor-pointer md:hidden fixed left-2 top-[47%] max-w-[120px] -translate-y-1/2 bg-white text-[#06334d] shadow-lg px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 animate-fadePop z-50">
           Masukkan nomor resi di sini
         </div>
       )}
-      
+
       <div className="max-w-[1200px] mx-auto flex gap-6 relative px-5">
         {isDrawerOpen && (
           <div
