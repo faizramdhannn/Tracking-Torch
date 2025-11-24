@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { X } from "lucide-react";
+import Image from "next/image"
 
 export default function HistoryPOD({ item }: any) {
   const [previewImg, setPreviewImg] = useState<string | null>(null);
@@ -58,16 +59,12 @@ export default function HistoryPOD({ item }: any) {
           onClick={() => setPreviewImg(null)}
         >
           <div
-            className="
-              relative 
-              max-w-[90%] 
-              max-h-[90%] 
-            "
+            className="relative w-full max-w-[700px] max-h-[90vh] mx-4"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={() => setPreviewImg(null)}
-              className="absolute -top-10 right-0 text-white hover:text-gray-300"
+              className="absolute top-3 right-3 bg-black/60 rounded-full p-1 text-white hover:bg-black/80 transition"
             >
               <X className="w-8 h-8" />
             </button>
@@ -75,7 +72,7 @@ export default function HistoryPOD({ item }: any) {
             <img
               src={previewImg}
               alt="Preview POD"
-              className="w-full h-full object-contain rounded-lg shadow-xl"
+              className="w-full max-h-[90vh] object-contain rounded-lg shadow-xl"
             />
           </div>
         </div>
