@@ -9,14 +9,14 @@ export default function HistorySection({
 }: any) {
   return (
     <>
-      <h2 className="text-2xl font-bold text-[#06334d] mb-6">
+      <h2 className="text-xl md:text-2xl font-bold text-[#06334d] mb-6">
         Riwayat Pengiriman
       </h2>
 
       <div className="space-y-8">
         {sortedDates.map((date: string, dateIndex: number) => (
           <div key={dateIndex}>
-            <h3 className="text-sm font-semibold text-gray-700 px-2 mb-2">
+            <h3 className="text-sm md:text-base font-semibold text-gray-700 px-2 mb-2">
               {date}
             </h3>
 

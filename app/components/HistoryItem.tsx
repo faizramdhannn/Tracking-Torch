@@ -12,19 +12,24 @@ export default function HistoryItem({
 }: any) {
   return (
     <>
-      <div className="flex items-center gap-3 py-2 hover:bg-gray-50 px-2 rounded">
-        <div
-          className={`w-5 h-5 rounded-full shrink-0 mt-0.5 border-2 border-white shadow ${
-            dateIndex === 0 && itemIndex === 0 ? "bg-[#06334d]" : "bg-gray-300"
-          }`}
-        />
+      <div className="flex items-center gap-3 md:gap-4 py-2 hover:bg-gray-50 px-2 rounded">
+        {/* KOLOM 1: Titik + Jam */}
+        <div className="flex flex-col md:flex-row items-center gap-1 md:gap-3 min-w-[60px] md:min-w-[110px]">
+          {/* Titik - selalu di kiri */}
+          <div
+            className={`w-5 h-5 rounded-full shrink-0 border-2 border-white shadow md:self-start ${
+              dateIndex === 0 && itemIndex === 0 ? "bg-[#06334d]" : "bg-gray-300"
+            }`}
+          />
+          {/* Jam - center vertikal di desktop */}
+          <span className="text-xs md:text-base text-gray-500 text-center md:text-left whitespace-nowrap md:self-center">
+            {item?.dateTime ? formatTime(item.dateTime) : ""}
+          </span>
+        </div>
 
-        <span className="text-s text-gray-500 min-w-[60px] text-center">
-          {item?.dateTime ? formatTime(item.dateTime) : ""}
-        </span>
-
+        {/* KOLOM 2: Deskripsi + POD Button */}
         <div className="flex-1 min-w-0">
-          <p className="text-s text-gray-600 leading-relaxed">
+          <p className="text-sm md:text-base text-gray-600 leading-relaxed">
             {item.description
               ?.toLowerCase()
               .replace(/\b\w/g, (c: string) => c.toUpperCase())}
@@ -33,7 +38,7 @@ export default function HistoryItem({
           {!!hasPOD && (
             <button
               onClick={() => togglePOD(podKey)}
-              className="text-[#06334d] hover:text-[#acc72f] text-s underline mt-1 cursor-pointer"
+              className="text-[#06334d] hover:text-[#acc72f] text-sm md:text-base underline mt-1 cursor-pointer"
             >
               {expandedPOD.includes(podKey)
                 ? "Sembunyikan Bukti Pengiriman"
@@ -44,7 +49,7 @@ export default function HistoryItem({
       </div>
 
       {!!hasPOD && expandedPOD.includes(podKey) && (
-        <div className="ml-[88px] mb-3 p-3 rounded-lg">
+        <div className="ml-[72px] md:ml-[126px] mb-3 p-3 rounded-lg bg-gray-50">
           <HistoryPOD item={item} />
         </div>
       )}

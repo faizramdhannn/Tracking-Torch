@@ -1,6 +1,6 @@
 export default function AddressItem({ label, value, icon }: any) {
   return (
-    <div className="flex gap-3">
+    <div className="flex gap-3 w-content">
       <div className="shrink-0">
         <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
           {icon === "user" ? (
@@ -42,8 +42,8 @@ export default function AddressItem({ label, value, icon }: any) {
       </div>
 
       <div>
-        <p className="text-sm text-gray-500 mb-1">{label}</p>
-        <p className="text-base font-semibold text-gray-800 uppercase">
+        <p className="text-sm md:text-base text-gray-500 mb-1">{label}</p>
+        <p className="text-base md:text-lg font-semibold text-gray-800 uppercase">
           {value}
         </p>
       </div>
