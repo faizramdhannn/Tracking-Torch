@@ -47,9 +47,10 @@ export default function ProgressSteps({ steps }: any) {
               </div>
 
               <p
-                className={`text-xs md:text-sm text-center font-semibold ${
+                className={`text-xs text-center font-semibold leading-tight ${
                   step.completed ? "text-gray-800" : "text-gray-400"
                 }`}
+                style={{ fontSize: '12px' }}
               >
                 {step.label}
               </p>

@@ -45,11 +45,11 @@ export const metadata: Metadata = {
     "Lacak status pengiriman pesanan Torch secara real-time. Masukkan nomor resi untuk melihat lokasi paket, riwayat perjalanan, kurir, dan estimasi waktu tiba.",
   icons: {
     icon: [
-      { url: "/avatar.svg", type: "image/svg+xml" },
-      { url: "/favicon.ico", sizes: "any" }
+      { url: "/torch-icon.ico", sizes: "48x48" },
+      { url: "/avatar.svg", type: "image/svg+xml" }
     ],
-    shortcut: "/avatar.svg",
-    apple: "/apple-touch-icon.png",
+    shortcut: "/torch-icon.ico",
+    apple: "/avatar.svg",
   },
   openGraph: {
     title: "Tracking Pengiriman Torch | Lacak Status Order & Paket Anda",
@@ -83,6 +83,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id" className={`${openSauceSans.variable} ${openSauceOne.variable}`}>
+      <head>
+        <link rel="icon" type="image/x-icon" href="/torch-icon.ico" />
+        <link rel="icon" type="image/svg+xml" href="/avatar.svg" />
+        <link rel="apple-touch-icon" href="/avatar.svg" />
+      </head>
       <body className="font-sans antialiased">
         {children}
       </body>
